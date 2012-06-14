@@ -19,30 +19,37 @@
 
 define :solr_instance, :path => "/srv", :type => "master" do
   include_recipe "solr"
-  
-  cap_setup "#{params[:name]}" do
-    path "#{params[:path]}/#{params[:name]}"
-    appowner "solr"
+
+  root_group = value_for_platform(
+    "openbsd" => { "default" => "wheel" },
+    "freebsd" => { "default" => "wheel" },
+    "default" => "root"
+  )
+
+  directory "#{params[:path]}/#{params[:name]}" do
+    owner "root"
+    group root_group
+    mode 0775
   end
 
-  %w{ solr solr/data }.each do |dir|
+  %w{ bin conf releases shared }.each do |dir|
+    directory "#{params[:path]}/#{dir}" do
+      owner "root"
+      group root_group
+      mode 0775
+    end
+  end
+
+  %w{ shared/log shared/system solr solr/data }.each do |dir|
     directory "#{params[:path]}/#{params[:name]}/#{dir}" do
       owner node[:solr][:user]
       group node[:solr][:group]
-      mode 0755
+      mode 0775
     end
   end
 
-  %w{ bin conf }.each do |dir|
-    directory "#{params[:path]}/#{params[:name]}/#{dir}" do
-      owner "root"
-      group "nogroup"
-      mode 0755
-    end
-  end
-  
   runit_service "#{params[:name]}_solr"
-  
+
   directory "#{params[:path]}/#{params[:name]}/.ssh" do
     owner node[:solr][:user]
     group node[:solr][:group]
