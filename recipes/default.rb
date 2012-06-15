@@ -18,7 +18,6 @@
 #
 
 include_recipe "java"
-include_recipe "capistrano"
 include_recipe "runit"
 
 group node[:solr][:group] do
