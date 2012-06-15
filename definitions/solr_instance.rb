@@ -33,7 +33,7 @@ define :solr_instance, :path => "/srv", :type => "master" do
   end
 
   %w{ bin conf releases shared }.each do |dir|
-    directory "#{params[:path]}/#{dir}" do
+    directory "#{params[:path]}/#{params[:name]}/#{dir}" do
       owner "root"
       group root_group
       mode 0775
