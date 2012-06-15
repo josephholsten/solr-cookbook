@@ -3,12 +3,12 @@ maintainer_email  "cookbooks@opscode.com"
 license           "Apache 2.0"
 description       "Sets up environment for solr instances"
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version           "0.8.2"
+version           "0.8.3"
 suggests          "ruby"
 
 recipe "solr", "Sets up environment for solr replication"
 
-%w{ java runit }.each do |cb|
+%w{ apache2 java runit }.each do |cb|
   depends cb
 end
 
